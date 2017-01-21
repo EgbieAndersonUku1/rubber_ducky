@@ -93,8 +93,8 @@ def download_file(url, string=True):
 				  be decode as a utf-8 or not.
 
 		          If the string flag is set to True it tells the function that
-				  is okay to decoded into in a utf-8 format as we are expecting
-				  the downloaded material to be in string format.
+				  is okay for the string to be decoded into in a utf-8 format 
+				  as we are expecting the downloaded material to be in string format.
 
 				  If the string flag is set to False it tells the function not
 				  to decode in utf-8 because the data downloaded is not a string.
