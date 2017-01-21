@@ -395,7 +395,7 @@ def main():
 			if check_file_ext(payload_name, '.exe'):
 				break
 
-		print("[+] Please input your Twin-Duck drive name e.g. backup. ")
+		print("[+] Please input your Twin-Duck drive name e.g. backup.. ")
 		drive_name = input('[OFFLINE] >>> (drive_name) : ')
 
 		msg = "[OFFLINE] Ducky D&E Blazing fast payload (Without UAC bypass) "
