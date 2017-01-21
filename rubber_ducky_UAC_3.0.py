@@ -22,7 +22,7 @@
 # CHOICES 3 AND 4 AS THEY REQUIRE A RUBBER DUCKY AND I NO LONGER HAVE A
 # RUBBER DUCKY.
 #
-# WELCOME TO THE MAD HOUSE AND LET THE FUNNNNNNNN BEGIN..
+# WELCOME TO THE MAD HOUSE AND LET THE MADNESS BEGIN..
 ##############################################################################
 
 import sys
