@@ -358,12 +358,12 @@ def main():
 
     if choice == 1 or choice == 2:
         while True:
-            print('\n[+] Please enter your binary payload direct link URL( www.example.com/pay.exe):')
+            print('\n[+] Please enter your binary payload direct link URL(www.example.com/pay.exe):')
             binary_payload_url = input('[ONLINE] >>> (binary_payload_url) : ').lower()
             if check_file_ext(binary_payload_url, '.exe'):
                 break
 
-        print("\n[+] Enter a name to save your payload file as (Default: update.exe): ")
+        print("\n[+] Enter a NAME to save your payload file as (Default: update.exe): ")
         print('[+] This will be stored on the target machine: ')
         file_name = input('[ONLINE]>>> (filename) : ')
 
@@ -380,7 +380,7 @@ def main():
         print("\n[+] Please upload this .vbs file as raw text format to a webserver(Pastebin works great)")
         sleep(1)
         print('[+] Pastebin/RAW recommended Example http://pastebin.com/raw/VBSPAYLOAD)')
-        print('[+] Please now enter your UAC VBS Payload URL')
+        print('[+] Please now enter your UAC VBS Payload URL you used for upload.')
         uac_payload_url = input("ONLINE VERSION with UAC BYPASS >>> (UAC_VBS_payload_urL) : ")
         sleep(1)
         print('\n[+] Enter a name to save the UAC VBS Payload file as, default name (update.vbs): ')
@@ -390,7 +390,7 @@ def main():
     elif choice == 3 or choice == 4:
 
         while True:
-            print("[+] Enter your binary payload name located on the drive e.g/ update.exe: ")
+            print("[+] Enter your BINARY PAYLOAD NAME located on the drive e.g update.exe: ")
             payload_name = input('[OFFLINE] >>> (payload_name) : ')
             if check_file_ext(payload_name, '.exe'):
                 break
@@ -406,7 +406,7 @@ def main():
             print(replace_value(msg, '(Without UAC bypass)', '(With UAC bypass)' ))
 
             while True:
-                print("[OFFLINE] Please input your desired UAC VBS local filename(Example: update.vbs):")
+                print("[OFFLINE] Please input your desired UAC VBS local file name(Example: update.vbs):")
                 stager_name = input('[OFFLINE] >>> (UAC_VBS_LOCAL_FILENAME) : ')
                 if check_file_ext(stager_name, '.vbs'):
                     break
