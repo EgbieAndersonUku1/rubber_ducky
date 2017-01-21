@@ -88,13 +88,15 @@ def download_file(url, string=True):
 	    - url   : The url to download data from.
 		- string: String flag takes two arguments True or False. Default mode
 				  True.
+
 		          Becuase the urlopen downloads the data from the url in bytes.
 				  The string flag job is to determines whether the data should
 				  be decode as a utf-8 or not.
 
-		          If the string flag is set to True it tells the function that
-				  is okay for the string to be decoded into in a utf-8 format 
-				  as we are expecting the downloaded material to be in string format.
+		          If the string flag is set to True it tells the method that
+				  is okay to go ahead and decoded the returned value into a
+				  utf-8 format as we are expecting the downloaded material
+				  to be in string format.
 
 				  If the string flag is set to False it tells the function not
 				  to decode in utf-8 because the data downloaded is not a string.
