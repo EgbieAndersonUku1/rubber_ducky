@@ -5,7 +5,7 @@
 # Author : Egbie
 # Version DuckyScript 3.0
 # Written in Python 3
-# Works only in python 3.x
+# Works only in python 3.xx
 #
 # I WOULD LIKE TO BEGIN BY GIVE A SHOUT OUT TO SKIDDIE THE ORIGINAL
 # CREATOR OF UAC-DUCK GENERATOR SCRIPT. MY WORK IS BASED OFF SKIDDIE
