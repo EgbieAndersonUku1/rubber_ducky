@@ -238,7 +238,7 @@ def generate_script(online_version, uac_bypass, **kw):
     """
 
     if online_version and not uac_bypass: # online version without UAC bypass
-        gen_payload_duckyscript(kw['payload_url'], kw['file_name']) # Generatea Payload Ducky Script
+        gen_payload_duckyscript(kw['payload_url'], kw['file_name']) # Generate a Payload Ducky Script
         
     elif online_version and uac_bypass: #  online version with UAC bypass
 
