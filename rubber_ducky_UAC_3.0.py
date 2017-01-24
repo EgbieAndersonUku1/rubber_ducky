@@ -424,7 +424,7 @@ def main():
                 if check_file_ext(stager_name, '.vbs'):
                     break
 
-            generate_script(False, True, payload_name=payload_name,
+            generate_script(False, False, payload_name=payload_name,
                             stager_name=stager_name, drive_name=drive_name)
 
     elif choice == 5:
